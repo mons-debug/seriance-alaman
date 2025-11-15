@@ -27,21 +27,42 @@ body {
     "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Glassmorphism utilities */
+/* Hardware acceleration for smooth scrolling */
+html {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Glassmorphism utilities - optimized for mobile */
 .glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
+@media (min-width: 768px) {
+  .glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
+
 .glass-dark {
-  background: rgba(43, 155, 158, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(43, 155, 158, 0.15);
   border: 1px solid rgba(43, 155, 158, 0.2);
+}
+
+@media (min-width: 768px) {
+  .glass-dark {
+    background: rgba(43, 155, 158, 0.1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
 }
 
 /* Gradient backgrounds */
@@ -61,11 +82,25 @@ body {
   );
 }
 
-/* Smooth transitions */
+/* Smooth transitions - optimized for performance */
 * {
-  transition-property: color, background-color, border-color, transform, box-shadow;
+  transition-property: none;
+}
+
+/* Apply transitions only to interactive elements */
+button,
+a,
+.transition {
+  transition-property: color, background-color, border-color, opacity, transform;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 200ms;
+  transition-duration: 150ms;
+  will-change: auto;
+}
+
+/* Hardware acceleration for transforms */
+.transform {
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 /* Custom scrollbar */

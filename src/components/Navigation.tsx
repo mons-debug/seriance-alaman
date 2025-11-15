@@ -10,11 +10,19 @@ export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
+    
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 50);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -39,12 +47,13 @@ export default function Navigation() {
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.6 }}
-        className={`fixed top-0 z-50 w-full transition-all duration-300 ${
+        transition={{ duration: 0.4 }}
+        className={`fixed top-0 z-50 w-full transition-all duration-200 ${
           isScrolled
-            ? "bg-white/95 shadow-lg backdrop-blur-lg"
-            : "bg-white/80 backdrop-blur-md"
+            ? "bg-white/98 shadow-lg md:bg-white/95 md:backdrop-blur-md"
+            : "bg-white/95 md:bg-white/80 md:backdrop-blur-sm"
         }`}
+        style={{ willChange: "transform" }}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
           {/* Logo */}
@@ -121,8 +130,9 @@ export default function Navigation() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-40 bg-black/50 lg:hidden"
             />
 
             {/* Menu Panel */}
@@ -130,8 +140,9 @@ export default function Navigation() {
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              transition={{ type: "tween", duration: 0.2, ease: "easeOut" }}
               className="fixed right-0 top-0 z-50 h-full w-80 bg-white shadow-2xl lg:hidden"
+              style={{ willChange: "transform" }}
             >
               <div className="flex h-full flex-col p-6">
                 {/* Close Button */}
@@ -148,17 +159,14 @@ export default function Navigation() {
 
                 {/* Navigation Links */}
                 <nav className="flex-1 space-y-2">
-                  {navItems.map((item, index) => (
-                    <motion.button
+                  {navItems.map((item) => (
+                    <button
                       key={item.href}
-                      initial={{ opacity: 0, x: 50 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
                       onClick={() => scrollToSection(item.href)}
                       className="block w-full rounded-lg px-4 py-3 text-left text-lg font-semibold text-gray-700 transition-colors hover:bg-[#2B9B9E]/10 hover:text-[#2B9B9E]"
                     >
                       {item.label}
-                    </motion.button>
+                    </button>
                   ))}
                 </nav>
 

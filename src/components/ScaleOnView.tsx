@@ -13,21 +13,22 @@ interface ScaleOnViewProps {
 export default function ScaleOnView({
   children,
   delay = 0,
-  duration = 0.5,
+  duration = 0.3,
   className = "",
 }: ScaleOnViewProps) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "-50px", amount: 0.2 });
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, scale: 0.8 }}
+      initial={{ opacity: 0, scale: 0.95 }}
       animate={
-        isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }
+        isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }
       }
       transition={{ duration, delay, ease: "easeOut" }}
       className={className}
+      style={{ willChange: isInView ? "auto" : "opacity, transform" }}
     >
       {children}
     </motion.div>
